@@ -1,6 +1,6 @@
 {
-  "name": "Storyverse Audiobooks",
-  "short_name": "Storyverse",
+  "name": "StoryVerse Audiobooks",
+  "short_name": "StoryVerse",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#111827",
