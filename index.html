@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StoryVerse Audiobooks</title>
+
+    <!-- PWA & SEO -->
+    <meta name="description" content="A minimalist, responsive audiobook website with a curated collection of stories.">
+    <meta name="theme-color" content="#8b5cf6">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="https://github.com/user-attachments/assets/69bfe7a2-a189-4cc4-bba0-116652ea9f04" type="image/png">
+    <link rel="apple-touch-icon" href="https://github.com/user-attachments/assets/69bfe7a2-a189-4cc4-bba0-116652ea9f04">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* CSS Reset & Base Styles */
+        :root {
+            --bg-color: #111827;
+            --text-color: #f9fafb;
+            --text-muted-color: #9ca3af;
+            --accent-color: #8b5cf6;
+            --surface-color: #1f2937;
+            --border-color: #374151;
+            --heading-font: 'Poppins', sans-serif;
+            --body-font: 'Open Sans', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--body-font);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--heading-font);
+            color: var(--text-color);
+            margin-bottom: 0.5em;
+        }
+        
+        a {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        
+        a:hover {
+            color: #a78bfa;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+        
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header & Navigation */
+        .site-header {
+            background-color: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .site-header nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-family: var(--heading-font);
+            font-size: 1.5rem;
+            color: var(--text-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--text-muted-color);
+            font-weight: 600;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-links a.active, .nav-links a:hover {
+            color: var(--text-color);
+            border-bottom-color: var(--accent-color);
+        }
+
+        /* Buttons & Forms */
+        .btn {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: #7c3aed;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-family: var(--body-font);
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px var(--accent-color);
+        }
+
+        /* Home Page */
+        #home-page .hero {
+            text-align: center;
+            padding: 4rem 1rem;
+        }
+        #home-page .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+        #home-page .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted-color);
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 1rem;
+            padding-bottom: 1.5rem; /* For scrollbar */
+        }
+        .carousel::-webkit-scrollbar { height: 8px; }
+        .carousel::-webkit-scrollbar-track { background: var(--surface-color); }
+        .carousel::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 4px; }
+        
+        .carousel .book-card {
+            flex: 0 0 60%;
+            scroll-snap-align: center;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .category-card {
+            background-color: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            color: var(--accent-color);
+        }
+        
+        .newsletter {
+            background-color: var(--surface-color);
+            padding: 3rem 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 3rem;
+        }
+        .newsletter form {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            max-width: 500px;
+            margin: 1rem auto 0;
+        }
+
+        /* Library Page */
+        .library-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        #search-input { margin-bottom: 0; }
+        #category-filter {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        #library-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .book-card {
+            background: var(--surface-color);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        .book-card img {
+            width: 100%;
+            aspect-ratio: 2 / 3;
+            object-fit: cover;
+            background-color: var(--border-color);
+        }
+        .book-card-info {
+            padding: 1rem;
+        }
+        .book-card h3 {
+            font-size: 1rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0;
+        }
+        .book-card p {
+            font-size: 0.85rem;
+            color: var(--text-muted-color);
+            margin: 0.25rem 0 0;
+        }
+        .play-button-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            cursor: pointer;
+        }
+        .book-card:hover .play-button-overlay {
+            opacity: 1;
+        }
+        .play-button-overlay svg {
+            width: 50px;
+            height: 50px;
+            fill: white;
+        }
+        
+        /* About Page */
+        #about-page .content {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+            text-align: center;
+        }
+        #founder img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            border: 4px solid var(--accent-color);
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        .social-links a {
+            font-weight: 600;
+        }
+
+        /* Contact Page */
+        #contact-page .contact-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        .faq details {
+            background: var(--surface-color);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border: 1px solid var(--border-color);
+        }
+        .faq summary {
+            padding: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .faq summary::-webkit-details-marker { display: none; }
+        .faq summary::after {
+            content: '+';
+            float: right;
+            font-size: 1.5rem;
+            transition: transform 0.2s;
+        }
+        .faq details[open] summary::after {
+            transform: rotate(45deg);
+        }
+        .faq p {
+            padding: 0 1rem 1rem;
+            color: var(--text-muted-color);
+            border-top: 1px solid var(--border-color);
+            margin-top: 0.5rem;
+        }
+        
+        /* Audio Player */
+        #audio-player-container {
+            position: fixed;
+            bottom: -150px;
+            left: 0;
+            width: 100%;
+            background: var(--surface-color);
+            border-top: 1px solid var(--border-color);
+            padding: 1rem 5%;
+            z-index: 200;
+            transition: bottom 0.3s ease-in-out;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.2);
+        }
+        #audio-player-container.visible {
+            bottom: 0;
+        }
+        .player-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .player-book-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            width: 25%;
+            min-width: 150px;
+        }
+        .player-book-info img {
+            width: 50px;
+            height: 50px;
+            border-radius: 4px;
+        }
+        .player-book-info div {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .player-book-info h4 { font-size: 0.9rem; margin: 0; }
+        .player-book-info p { font-size: 0.8rem; color: var(--text-muted-color); margin: 0; }
+        
+        .player-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-grow: 1;
+        }
+        .player-buttons {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .player-buttons button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+        .player-buttons button svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+        #play-pause-btn svg { width: 32px; height: 32px; }
+        
+        .progress-container {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .progress-bar {
+            flex-grow: 1;
+            height: 5px;
+            background: var(--border-color);
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .progress {
+            height: 100%;
+            width: 0;
+            background: var(--accent-color);
+            border-radius: 5px;
+        }
+        .time-display {
+            font-size: 0.75rem;
+            color: var(--text-muted-color);
+            min-width: 40px;
+            text-align: center;
+        }
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            width: 15%;
+            min-width: 100px;
+        }
+        .volume-control input[type="range"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 100%;
+            height: 5px;
+            background: var(--border-color);
+            outline: none;
+            border-radius: 5px;
+            margin: 0;
+            padding: 0;
+        }
+        .volume-control input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            background: var(--accent-color);
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                bottom: 0; left: 0;
+                width: 100%;
+                background: var(--surface-color);
+                border-top: 1px solid var(--border-color);
+                justify-content: space-around;
+                padding: 0.75rem 0;
+                gap: 0;
+            }
+            .nav-links a {
+                border-bottom: none;
+                padding: 0.25rem 0.5rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                font-size: 0.75rem;
+            }
+            main { padding-bottom: 70px; /* Space for nav */ }
+            .player-book-info, .volume-control { display: none; }
+        }
+
+        @media (min-width: 768px) {
+            .carousel .book-card { flex: 0 0 30%; }
+            #library-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+            .library-controls { flex-direction: row; }
+            #contact-page .contact-wrapper { flex-direction: row; }
+            #contact-page > div { flex: 1; }
+            #about-page .content { text-align: left; flex-direction: row; align-items: center; }
+            #founder img { margin: 0 2rem 0 0; }
+        }
+
+        @media (min-width: 1024px) {
+            .carousel .book-card { flex: 0 0 20%; }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <header class="site-header">
+            <nav>
+                <a href="#home" class="logo">StoryVerse</a>
+                <div class="nav-links">
+                    <a href="#home" class="nav-link active">Home</a>
+                    <a href="#library" class="nav-link">Library</a>
+                    <a href="#about" class="nav-link">About</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <!-- Home Page -->
+            <section id="home-page" class="page active">
+                <div class="hero">
+                    <h1>Your Universe of Stories.</h1>
+                    <p>Listen to captivating audiobooks anytime, anywhere.</p>
+                    <a href="#library" class="btn">Explore Library</a>
+                </div>
+                <div class="container">
+                    <section id="featured-books">
+                        <h2 class="section-title">Featured Audiobooks</h2>
+                        <div id="featured-carousel" class="carousel"></div>
+                    </section>
+                    <section id="browse-categories" style="margin-top: 3rem;">
+                        <h2 class="section-title">Browse by Category</h2>
+                        <div id="home-category-grid" class="category-grid"></div>
+                    </section>
+                    <section class="newsletter">
+                        <h2>Join Our Newsletter</h2>
+                        <p>Get the latest updates on new arrivals and exclusive content.</p>
+                        <form id="newsletter-form">
+                            <input type="email" name="email" placeholder="your.email@example.com" required>
+                            <button type="submit" class="btn">Subscribe</button>
+                        </form>
+                    </section>
+                </div>
+            </section>
+
+            <!-- Library Page -->
+            <section id="library-page" class="page">
+                <div class="container">
+                    <h2 class="section-title">Audiobook Library</h2>
+                    <div class="library-controls">
+                        <input type="search" id="search-input" placeholder="Search by title or author...">
+                        <select id="category-filter"></select>
+                    </div>
+                    <div id="library-grid">
+                        <!-- Book cards will be injected here by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- About Page -->
+            <section id="about-page" class="page">
+                <div class="container">
+                    <h2 class="section-title">About StoryVerse</h2>
+                    <div class="content">
+                        <section id="founder">
+                            <img src="https://github.com/user-attachments/assets/b4bbc89f-e7ff-43d2-8a9b-7b001b361ee9" alt="Rajkishor Patra" onerror="this.src='placeholder.svg'">
+                            <div>
+                                <h2>Rajkishor Patra</h2>
+                                <p>Founder & Chief Storyteller</p>
+                                <p>A passionate developer and an avid listener, I created StoryVerse to share the magic of audiobooks with the world in a simple, beautiful, and accessible way.</p>
+                                <div class="social-links">
+                                    <a href="https://github.com/imraj569" target="_blank">GitHub</a>
+                                    <a href="https://instagram.com/im.raj.569" target="_blank">Instagram</a>
+                                    <a href="mailto:rajkishorpatra0111@gmail.com">Email</a>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Page -->
+            <section id="contact-page" class="page">
+                <div class="container">
+                    <h2 class="section-title">Get In Touch</h2>
+                    <div class="contact-wrapper">
+                        <div id="contact-form-section">
+                            <h3>Send Us a Message</h3>
+                            <form id="contact-form">
+                                <input type="text" name="name" placeholder="Your Name" required>
+                                <input type="email" name="email" placeholder="Your Email" required>
+                                <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+                                <button type="submit" class="btn">Send Message</button>
+                            </form>
+                        </div>
+                        <div id="faq-section">
+                           <h3>Frequently Asked Questions</h3>
+                           <div class="faq">
+                                <details>
+                                    <summary>Is this service free?</summary>
+                                    <p>Yes, StoryVerse is a demonstration project and is completely free to use. All audio samples are for demonstration purposes.</p>
+                                </details>
+                                <details>
+                                    <summary>Can I add my own books?</summary>
+                                    <p>Content is managed via the `audiobooks.json` file. If you deploy your own version, you can add any books you have the rights to.</p>
+                                </details>
+                                <details>
+                                    <summary>How does the offline mode work?</summary>
+                                    <p>We use a Service Worker to cache the main application files. This means you can open the app and browse the library even without an internet connection, but you'll need to have been online to play an audio file for the first time.</p>
+                                </details>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Audio Player -->
+    <div id="audio-player-container">
+        <div class="player-content">
+            <div class="player-book-info">
+                <img id="player-cover" src="placeholder.svg" alt="Current book cover">
+                <div>
+                    <h4 id="player-title">Select a book</h4>
+                    <p id="player-author">to start listening</p>
+                </div>
+            </div>
+            <div class="player-controls">
+                <div class="player-buttons">
+                    <button id="skip-back-btn" aria-label="Skip back 30 seconds">
+                        <svg viewBox="0 0 24 24"><path d="M6 13c0 1.66 1.34 3 3 3s3-1.34 3-3-1.34-3-3-3V5l-5 4 5 4v-2zm9 4c1.66 0 3-1.34 3-3s-1.34-3-3-3v2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1H9c0 1.66 1.34 3 3 3zm-3-8V5l-5 4 5 4v-2c1.66 0 3 1.34 3 3s-1.34 3-3 3h-3c-1.66 0-3-1.34-3-3s1.34-3 3-3h3z"/></svg> <!-- Placeholder for rewind-30 icon -->
+                    </button>
+                    <button id="play-pause-btn" aria-label="Play">
+                        <!-- Play/Pause SVG will be toggled by JS -->
+                    </button>
+                    <button id="skip-fwd-btn" aria-label="Skip forward 30 seconds">
+                        <svg viewBox="0 0 24 24"><path d="M15 13c0 1.66 1.34 3 3 3s3-1.34 3-3-1.34-3-3-3v2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1h-2zm-3-8V5l-5 4 5 4v-2c1.66 0 3 1.34 3 3s-1.34 3-3 3H9c-1.66 0-3-1.34-3-3s1.34-3 3-3h3z"/></svg> <!-- Placeholder for forward-30 icon -->
+                    </button>
+                </div>
+                <div class="progress-container">
+                    <span id="current-time" class="time-display">0:00</span>
+                    <div id="progress-bar" class="progress-bar"><div id="progress" class="progress"></div></div>
+                    <span id="total-duration" class="time-display">0:00</span>
+                </div>
+            </div>
+            <div class="volume-control">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"></path></svg>
+                <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1">
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- STATE MANAGEMENT ---
+            const state = {
+                books: [],
+                categories: [],
+                currentFilter: {
+                    search: '',
+                    category: 'all'
+                }
+            };
+            
+            // --- PWA REGISTRATION ---
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker registered successfully'))
+                    .catch(err => console.error('Service Worker registration failed:', err));
+            }
+
+            // --- DOM ELEMENTS ---
+            const pages = document.querySelectorAll('.page');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const libraryGrid = document.getElementById('library-grid');
+            const searchInput = document.getElementById('search-input');
+            const categoryFilter = document.getElementById('category-filter');
+            const featuredCarousel = document.getElementById('featured-carousel');
+            const homeCategoryGrid = document.getElementById('home-category-grid');
+
+            // --- AUDIO PLAYER ELEMENTS ---
+            const audio = new Audio();
+            const playerContainer = document.getElementById('audio-player-container');
+            const playerCover = document.getElementById('player-cover');
+            const playerTitle = document.getElementById('player-title');
+            const playerAuthor = document.getElementById('player-author');
+            const playPauseBtn = document.getElementById('play-pause-btn');
+            const skipBackBtn = document.getElementById('skip-back-btn');
+            const skipFwdBtn = document.getElementById('skip-fwd-btn');
+            const progressBar = document.getElementById('progress-bar');
+            const progress = document.getElementById('progress');
+            const currentTimeEl = document.getElementById('current-time');
+            const totalDurationEl = document.getElementById('total-duration');
+            const volumeSlider = document.getElementById('volume-slider');
+
+            const playIcon = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>`;
+            const pauseIcon = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>`;
+            
+            // --- INITIALIZATION ---
+            async function initializeApp() {
+                try {
+                    const response = await fetch('audiobooks.json');
+                    state.books = await response.json();
+                    
+                    state.categories = ['all', ...new Set(state.books.map(b => b.category))];
+                    
+                    setupEventListeners();
+                    renderLibrary();
+                    renderCategories();
+                    renderFeatured();
+                    
+                    handleNavigation();
+                } catch (error) {
+                    console.error('Failed to load audiobooks:', error);
+                    libraryGrid.innerHTML = `<p style="color: var(--text-muted-color);">Could not load audiobooks. Please try again later.</p>`;
+                }
+            }
+            
+            // --- NAVIGATION ---
+            function showPage(pageId) {
+                pages.forEach(page => page.classList.toggle('active', page.id === `${pageId}-page`));
+                navLinks.forEach(link => {
+                    link.classList.toggle('active', link.hash === `#${pageId}`);
+                });
+                window.scrollTo(0, 0);
+            }
+            
+            function handleNavigation() {
+                const hash = window.location.hash.substring(1) || 'home';
+                showPage(hash);
+                
+                window.addEventListener('hashchange', () => {
+                    const hash = window.location.hash.substring(1) || 'home';
+                    showPage(hash);
+                });
+
+                document.body.addEventListener('click', e => {
+                    if (e.target.matches('a[href^="#"]')) {
+                        e.preventDefault();
+                        const id = e.target.getAttribute('href').substring(1);
+                        window.location.hash = id;
+                    }
+                });
+            }
+
+            // --- RENDERING ---
+            function renderLibrary() {
+                const filteredBooks = state.books.filter(book => {
+                    const matchesCategory = state.currentFilter.category === 'all' || book.category === state.currentFilter.category;
+                    const matchesSearch = book.title.toLowerCase().includes(state.currentFilter.search) || book.author.toLowerCase().includes(state.currentFilter.search);
+                    return matchesCategory && matchesSearch;
+                });
+                
+                libraryGrid.innerHTML = filteredBooks.length ? filteredBooks.map(createBookCardHTML).join('') : '<p>No books found.</p>';
+            }
+
+            function createBookCardHTML(book) {
+                return `
+                    <div class="book-card" data-id="${book.id}" onclick='playBook("${book.id}")'>
+                        <img src="${book.coverUrl}" alt="${book.title} Cover" loading="lazy" onerror="this.src='placeholder.svg'">
+                        <div class="book-card-info">
+                            <h3>${book.title}</h3>
+                            <p>${book.author}</p>
+                        </div>
+                        <div class="play-button-overlay">
+                            <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"></path></svg>
+                        </div>
+                    </div>`;
+            }
+
+            function renderFeatured() {
+                const featured = state.books.slice(0, 5);
+                featuredCarousel.innerHTML = featured.map(createBookCardHTML).join('');
+            }
+            
+            function renderCategories() {
+                categoryFilter.innerHTML = state.categories.map(cat => `<option value="${cat}">${cat.charAt(0).toUpperCase() + cat.slice(1)}</option>`).join('');
+                homeCategoryGrid.innerHTML = state.categories.slice(1, 7).map(cat => `<a href="#library" class="category-card" data-category="${cat}">${cat}</a>`).join('');
+            }
+
+            // --- EVENT LISTENERS ---
+            function setupEventListeners() {
+                searchInput.addEventListener('input', e => {
+                    state.currentFilter.search = e.target.value.toLowerCase();
+                    renderLibrary();
+                });
+                
+                categoryFilter.addEventListener('change', e => {
+                    state.currentFilter.category = e.target.value;
+                    renderLibrary();
+                });
+                
+                homeCategoryGrid.addEventListener('click', e => {
+                    if(e.target.matches('.category-card')) {
+                        const category = e.target.dataset.category;
+                        state.currentFilter.category = category;
+                        categoryFilter.value = category;
+                        window.location.hash = 'library';
+                        renderLibrary(); // Re-render in case hashchange doesn't fire fast enough
+                    }
+                });
+
+                // Form submissions
+                document.getElementById('newsletter-form').addEventListener('submit', e => {
+                    e.preventDefault();
+                    alert('Thank you for subscribing!');
+                    e.target.reset();
+                });
+                document.getElementById('contact-form').addEventListener('submit', e => {
+                    e.preventDefault();
+                    alert('Message sent! We will get back to you soon.');
+                    e.target.reset();
+                });
+                
+                // Audio Player Events
+                playPauseBtn.addEventListener('click', togglePlayPause);
+                skipBackBtn.addEventListener('click', () => audio.currentTime -= 30);
+                skipFwdBtn.addEventListener('click', () => audio.currentTime += 30);
+                volumeSlider.addEventListener('input', e => audio.volume = e.target.value);
+                progressBar.addEventListener('click', scrub);
+                audio.addEventListener('timeupdate', updateProgress);
+                audio.addEventListener('loadedmetadata', () => {
+                    totalDurationEl.textContent = formatTime(audio.duration);
+                });
+                audio.addEventListener('play', () => playPauseBtn.innerHTML = pauseIcon);
+                audio.addEventListener('pause', () => playPauseBtn.innerHTML = playIcon);
+                audio.addEventListener('ended', () => {
+                     playPauseBtn.innerHTML = playIcon;
+                     progress.style.width = '0%';
+                });
+            }
+            
+            // --- AUDIO PLAYER LOGIC ---
+            window.playBook = function(bookId) {
+                const book = state.books.find(b => b.id === bookId);
+                if (!book) return;
+
+                playerContainer.classList.add('visible');
+                playerCover.src = book.coverUrl;
+                playerTitle.textContent = book.title;
+                playerAuthor.textContent = book.author;
+                
+                // Handle extensionless URLs and set MIME type
+                if (!book.audioUrl.includes('.')) {
+                    audio.type = 'audio/mpeg'; // Assume MP3
+                } else {
+                    audio.type = ''; // Let browser infer
+                }
+                
+                audio.src = book.audioUrl;
+                audio.preload = 'metadata';
+                audio.play();
+                playPauseBtn.innerHTML = pauseIcon;
+            }
+
+            function togglePlayPause() {
+                if (audio.paused) {
+                    audio.play();
+                } else {
+                    audio.pause();
+                }
+            }
+
+            function updateProgress() {
+                const percent = (audio.currentTime / audio.duration) * 100;
+                progress.style.width = `${percent}%`;
+                currentTimeEl.textContent = formatTime(audio.currentTime);
+            }
+            
+            function scrub(e) {
+                const scrubTime = (e.offsetX / progressBar.offsetWidth) * audio.duration;
+                audio.currentTime = scrubTime;
+            }
+            
+            function formatTime(seconds) {
+                const minutes = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+            }
+
+            // --- START THE APP ---
+            initializeApp();
+        });
+    </script>
+</body>
+</html>

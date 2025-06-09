@@ -1,0 +1,53 @@
+
+[
+  {
+    "id": "weathering-with-you-123",
+    "title": "Weathering with You",
+    "author": "Makoto Shinkai",
+    "coverUrl": "https://www.themoviedb.org/t/p/original/a5PcmgOYXVZFaUrxsOkCn34rjHw.jpg",
+    "audioUrl": "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3",
+    "duration": "1h 52m",
+    "category": "Fantasy",
+    "description": "A magical tale about a runaway high school boy and a girl who can control the weather. Their powers come at a steep price."
+  },
+  {
+    "id": "atomic-habits-456",
+    "title": "Atomic Habits",
+    "author": "James Clear",
+    "coverUrl": "https://m.media-amazon.com/images/I/81wgcld4wxL._AC_UF1000,1000_QL80_.jpg",
+    "audioUrl": "https://www.learningcontainer.com/wp-content/uploads/2020/02/Sample-FLAC-File.flac",
+    "duration": "5h 35m",
+    "category": "Self-Help",
+    "description": "An easy and proven way to build good habits and break bad ones. Tiny changes, remarkable results."
+  },
+  {
+    "id": "project-hail-mary-789",
+    "title": "Project Hail Mary",
+    "author": "Andy Weir",
+    "coverUrl": "https://m.media-amazon.com/images/I/919mmNVe7FL._AC_UF1000,1000_QL80_.jpg",
+    "audioUrl": "https://www.learningcontainer.com/wp-content/uploads/2020/02/Sample-OGG-File.ogg",
+    "duration": "16h 10m",
+    "category": "Sci-Fi",
+    "description": "A lone astronaut is the last chance to save Earth from disaster. Can he solve an impossible scientific mystery?"
+  },
+  {
+    "id": "the-silent-patient-101",
+    "title": "The Silent Patient",
+    "author": "Alex Michaelides",
+    "coverUrl": "https://m.media-amazon.com/images/I/81JJd8S2TJL._AC_UF1000,1000_QL80_.jpg",
+    "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    "duration": "8h 45m",
+    "category": "Thriller",
+    "description": "A shocking psychological thriller of a woman's act of violence against her husband—and of the therapist obsessed with uncovering her motive."
+  },
+  {
+    "id": "dune-saga-202",
+    "title": "Dune",
+    "author": "Frank Herbert",
+    "coverUrl": "https://m.media-amazon.com/images/I/81ym34OM3NL._AC_UF1000,1000_QL80_.jpg",
+    "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+    "duration": "21h 5m",
+    "category": "Sci-Fi",
+    "description": "Set on the desert planet Arrakis, Dune is the story of the boy Paul Atreides, heir to a noble family tasked with ruling an inhospitable world where the only thing of value is the 'spice' melange, a drug capable of extending life and enhancing consciousness."
+  }
+]

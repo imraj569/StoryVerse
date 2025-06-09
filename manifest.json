@@ -1,0 +1,21 @@
+{
+  "name": "Storyverse Audiobooks",
+  "short_name": "Storyverse",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#8b5cf6",
+  "description": "A minimalist, responsive audiobook website.",
+  "icons": [
+    {
+      "src": "https://github.com/user-attachments/assets/69bfe7a2-a189-4cc4-bba0-116652ea9f04",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://github.com/user-attachments/assets/69bfe7a2-a189-4cc4-bba0-116652ea9f04",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
